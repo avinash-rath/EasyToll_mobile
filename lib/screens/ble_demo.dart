@@ -1,9 +1,13 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 import 'dart:typed_data';
 
+import 'package:easy_toll/utils/config.dart';
+import 'package:easy_toll/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:rx_ble/rx_ble.dart';
+import 'package:http/http.dart' as http;
 
 int time() => DateTime.now().millisecondsSinceEpoch;
 
@@ -64,6 +68,7 @@ class _BleDetectState extends State<BleDetect> {
   final randomWriteSize = TextEditingController(text: '100');
   var connectionState = BleConnectionState.disconnected;
   var isWorking = false;
+  bool isOn = false;
 
   Function wrapCall(Function fn) {
     return () async {
@@ -205,18 +210,29 @@ class _BleDetectState extends State<BleDetect> {
             Align(
               alignment: Alignment.topCenter,
               child: Padding(
-                padding: const EdgeInsets.only(top: 100.0),
+                padding: const EdgeInsets.only(top: 50.0),
                 child: RaisedButton(
-                  child: Text('Start Scanning'),
-                  onPressed: wrapCall(startScan),
+                  color: isOn ? Colors.redAccent : Colors.lightBlue,
+                  child: Text(
+                    isOn ? 'Stop Scanning' : 'Start Scanning',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      isOn = !isOn;
+                    });
+                    startScan();
+                  },
                 ),
               ),
             ),
             Divider(),
             if (results.isEmpty) Text('Start scanning to connect to a device'),
-            
-            DetectedNotifier(results: results,),
-              
+            DetectedNotifier(
+              results: results,
+            ),
             Divider(),
             Column(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -231,7 +247,6 @@ class _BleDetectState extends State<BleDetect> {
   }
 }
 
-
 class DetectedNotifier extends StatefulWidget {
   final Map<String, ScanResult> results;
 
@@ -241,14 +256,58 @@ class DetectedNotifier extends StatefulWidget {
 }
 
 class _DetectedNotifierState extends State<DetectedNotifier> {
-
   List<String> strings = [];
+  String isAllowed;
+  Timer timer;
+  @override
+  initState() {
+    super.initState();
+    timer = Timer.periodic(Duration(seconds: 3), (Timer t) => hitApi());
+  }
+
+  hitApi() async {
+    http.Response response = await http.get(getPayStatus);
+    if (response.statusCode == 200) {
+      String respString = response.body;
+      setState(() {
+        isAllowed = respString;
+      });
+    }
+  }
 
   Widget checkConnection() {
     for (final scanResult in widget.results.values)
-     if(scanResult.deviceName.toString() == 'EasyToll') {
-       return Text('Device Found');
-     }
+      if (scanResult.deviceName.toString() == 'EasyToll') {
+        return Container(
+          padding: EdgeInsets.all(20.0),
+          width: double.infinity,
+          height: 150.0,
+          decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(25.0),
+              boxShadow: boxShadows),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text('Found Vehicle'),
+                  Text('Car number KA04AN1254'),
+                  Text('Vehicle registered : Avinash Rath'),
+                ],
+              ),
+              Column(
+                children: <Widget>[
+                  isAllowed != null
+                      ? Text('Vehicle Allowed : $isAllowed')
+                      : CircularProgressIndicator(),
+                ],
+              ),
+            ],
+          ),
+        );
+      }
   }
 
   @override
@@ -256,5 +315,11 @@ class _DetectedNotifierState extends State<DetectedNotifier> {
     return Container(
       child: checkConnection(),
     );
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
   }
 }

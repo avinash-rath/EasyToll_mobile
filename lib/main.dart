@@ -1,3 +1,4 @@
+import 'package:easy_toll/screens/adminApp.dart';
 import 'package:easy_toll/screens/login.dart';
 import 'package:flutter/material.dart';
 
@@ -13,7 +14,7 @@ class MyApps extends StatelessWidget {
         fontFamily: 'QuickSand',
         primarySwatch: Colors.blue,
       ),
-      home: LoginPage(),
+      home: AdminApp(),
     );
   }
 }
