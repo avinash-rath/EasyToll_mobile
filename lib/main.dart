@@ -7,8 +7,10 @@ class MyApps extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'EasyToll',
       theme: ThemeData(
+        fontFamily: 'QuickSand',
         primarySwatch: Colors.blue,
       ),
       home: LoginPage(),
