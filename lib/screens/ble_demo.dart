@@ -46,12 +46,12 @@ class YesNoDialog extends StatelessWidget {
   }
 }
 
-class MyApp extends StatefulWidget {
+class BleDetect extends StatefulWidget {
   @override
-  _MyAppState createState() => _MyAppState();
+  _BleDetectState createState() => _BleDetectState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _BleDetectState extends State<BleDetect> {
   var returnValue;
   String deviceId;
   Exception returnError;
@@ -246,7 +246,7 @@ class _DetectedNotifierState extends State<DetectedNotifier> {
 
   Widget checkConnection() {
     for (final scanResult in widget.results.values)
-     if(scanResult.deviceName.toString() == 'Saru') {
+     if(scanResult.deviceName.toString() == 'EasyToll') {
        return Text('Device Found');
      }
   }
