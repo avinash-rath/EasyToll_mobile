@@ -35,7 +35,7 @@ class _LoginPageState extends State<LoginPage> {
     EdgeInsets devicePadding = MediaQuery.of(context).padding;
 
     return Scaffold(
-      backgroundColor: Color.fromRGBO(93, 142, 155, 1.0),
+      backgroundColor: Colors.white,
       body: Container(
           child: Stack(
         children: <Widget>[
@@ -50,8 +50,8 @@ class _LoginPageState extends State<LoginPage> {
                 // Add one stop for each color. Stops should increase from 0 to 1
                 stops: [0.0, 1.0],
                 colors: [
-                  Color.fromRGBO(170, 207, 211, 1.0),
-                  Color.fromRGBO(93, 142, 155, 1.0),
+                  Colors.white,
+                  Color.fromRGBO(93, 142, 155, 1.0).withOpacity(0.75),
                 ],
               ),
             ),
