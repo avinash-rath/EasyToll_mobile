@@ -281,29 +281,34 @@ class _DetectedNotifierState extends State<DetectedNotifier> {
         return Container(
           padding: EdgeInsets.all(20.0),
           width: double.infinity,
-          height: 150.0,
+          height: 250.0,
           decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(25.0),
               boxShadow: boxShadows),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text('Found Vehicle'),
-                  Text('Car number KA04AN1254'),
-                  Text('Vehicle registered : Avinash Rath'),
-                ],
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text('Found Vehicle'),
               ),
-              Column(
-                children: <Widget>[
-                  isAllowed != null
-                      ? Text('Vehicle Allowed : $isAllowed')
-                      : CircularProgressIndicator(),
-                ],
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text('Car number KA04AN1254'),
               ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text('Vehicle registered : Avinash Rath'),
+              ),
+              isAllowed != null
+                  ? Text(
+                      'Vehicle Allowed : $isAllowed',
+                      style: TextStyle(
+                        color: Colors.red,
+                      ),
+                    )
+                  : CircularProgressIndicator(),
             ],
           ),
         );

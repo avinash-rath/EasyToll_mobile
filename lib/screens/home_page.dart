@@ -1,6 +1,8 @@
 import 'dart:convert';
 
+import 'package:easy_toll/screens/login.dart';
 import 'package:easy_toll/screens/payments.dart';
+import 'package:easy_toll/screens/prepaid.dart';
 import 'package:easy_toll/utils/config.dart';
 import 'package:easy_toll/utils/styles.dart';
 import 'package:flutter/cupertino.dart';
@@ -66,6 +68,16 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        actions: <Widget>[IconButton(
+          icon: Icon(Icons.exit_to_app, color: Colors.black,),
+          onPressed: () {
+            Navigator.of(context).pushReplacement(
+              CupertinoPageRoute(
+                builder: (BuildContext context) => LoginPage()
+              )
+            );
+          },
+        )],
         backgroundColor: Colors.white,
         elevation: 10.0,
         centerTitle: true,
@@ -167,7 +179,11 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               onPressed: () {
-                // TODO: ADD Maps and Pre-paid Payments Page..
+                Navigator.of(context).push(
+                  CupertinoPageRoute(
+                    builder: (BuildContext context) => PrePaid(),
+                  ),
+                );
               },
               child: Text(
                 'Choosing Prepaid?',
@@ -179,10 +195,16 @@ class _HomePageState extends State<HomePage> {
             padding: EdgeInsets.all(15.0),
             child: Text(
               'Next Reward in $noOfRidesUntilReward rides',
-              style: TextStyle(color: Colors.lightBlue, fontSize: 16.0),
+              style: TextStyle(color: Color(0xFF3cc2bb), fontSize: 16.0),
             ),
           ),
-          Divider(),
+          Padding(
+            padding: EdgeInsets.only(top: 5.0, left: 15.0,bottom: 5),
+            child: Text(
+              'Payment History',
+              style: TextStyle(fontSize: 25.0, color: Colors.black),
+            ),
+          ),
           Expanded(
             child: ListView.builder(
               itemCount: list.length ?? 5,
@@ -204,11 +226,16 @@ class _HomePageState extends State<HomePage> {
                       children: <Widget>[
                         Column(
                           mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Text(
                               'Payment done : ${list[count].paymentAmount}',
-                              style: TextStyle(color: Colors.black),
-                            )
+                              style: TextStyle(color: Color(0xFF3cc2bb), fontSize: 19.0,
+                              fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(height: 5.0,),
+                            Text('Toll Booth : ${list[count].tollName}'),
+                            Text('Toll Location : ${list[count].paymentLocation}')
                           ],
                         )
                       ],
